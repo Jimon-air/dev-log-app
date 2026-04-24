@@ -3,60 +3,87 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [text, setText] = useState("");
-  const [logs, setLogs] = useState<{ text: string; date: string }[]>([]);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [logs, setLogs] = useState<
+    { id: string; text: string; date: string; tags: string[] }[]
+  >([]);
+  const [editText, setEditText] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  
-  useEffect(() => {
-    const savedLogs = localStorage.getItem("logs");
-    if (savedLogs) {
-      setLogs(JSON.parse(savedLogs));
-    }
-  }, []);
 
   const addLog = () => {
-  if (text.trim() === "") return;
-
-  const newLog = {
+    if (text.trim() === "") return;
+    const tags = extractTags(text);
+    const newLog = {
+      id: crypto.randomUUID(),
       text: text,
       date: new Date().toLocaleDateString(),
+      tags,
     };
 
-    setLogs([newLog, ...logs]);
+    setLogs((prev) => [newLog, ...prev]);
     setText("");
   };
 
-  const saveEdit = (index: number) => {
-    if (text.trim() === "") return;
+  const saveEdit = (id: string) => {
+    if (editText.trim() === "") return;
 
-    const newLogs = [...logs];
-    newLogs[index].text = text;
+    const tags = extractTags(editText); // ← 追加
+
+    const newLogs = logs.map((log) =>
+      log.id === id ? { ...log, text: editText, tags } : log
+    );
 
     setLogs(newLogs);
-    setText("");
-    setEditingIndex(null);
+    setEditText("");
+    setEditingId(null);
   };
 
-  const deleteLog = (index: number) => {
-    const newLogs = logs.filter((_, i) => i !== index);
-    setLogs(newLogs);
+  const deleteLog = (id: string) => {
+    setLogs(logs.filter((log) => log.id !== id));
+  };
+
+  const extractTags = (text: string) => {
+    const matches = text.match(/#\S+/g) || [];
+    return matches.map(tag => tag.replace("#", ""));
   };
 
   useEffect(() => {
     localStorage.setItem("logs", JSON.stringify(logs));
   }, [logs]);
 
+  useEffect(() => {
+    const savedLogs = localStorage.getItem("logs");
+    if (savedLogs) {
+      const parsedLogs = JSON.parse(savedLogs);
+
+      const logsWithId = parsedLogs.map((log: any) => ({
+        ...log,
+        id: log.id ?? crypto.randomUUID(),
+        date: log.date ?? new Date().toISOString(),
+        tags: log.tags ?? [],
+      }));
+
+      setLogs(logsWithId);
+      localStorage.setItem("logs", JSON.stringify(logsWithId));
+    }
+  }, []);
+
   return (
     <main style={{ padding: "20px" }}>
       <h1>開発ログアプリ</h1>
 
-      {editingIndex === null && (
+      {editingId === null && (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <div style={{ display: "flex", gap: "8px" }}>
             <input
               type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  addLog();
+                }
+              }}
               placeholder="今日やったこと"
             />
             <button onClick={addLog}>追加</button>
@@ -73,27 +100,35 @@ export default function Home() {
 
       <ul>
         {logs
-          .map((log, index) => ({ log, index }))
-          .filter(({ log }) =>
+          .filter(log =>
             log.text.toLowerCase().includes(search.toLowerCase())
           )
-          .map(({ log, index }) => (
-          <li key={index}>
-            {editingIndex === index ? (
+          .map(log => (
+          <li key={log.id}>
+            {editingId === log.id ? (
               <>
                 <input
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
                 />
-                <button onClick={() => saveEdit(index)}>保存</button>
+                <button onClick={() => saveEdit(log.id)}>保存</button>
               </>
             ) : (
               <>
-                {log.text}（{log.date}）
-                <button onClick={() => deleteLog(index)}>削除</button>
+                <div>
+                  {log.text}（{log.date}）
+                </div>
+
+                <div>
+                  {log.tags.map(tag => (
+                    <span key={tag}>#{tag} </span>
+                  ))}
+                </div>
+
+                <button onClick={() => deleteLog(log.id)}>削除</button>
                 <button onClick={() => {
-                  setText(log.text);
-                  setEditingIndex(index);
+                  setEditText(log.text);
+                  setEditingId(log.id);
                 }}>
                   編集
                 </button>
