@@ -5,7 +5,21 @@ export default function Home() {
   const [text, setText] = useState("");
   const [logs, setLogs] = useState<
     { id: string; text: string; date: string; tags: string[] }[]
-  >([]);
+  >(() => {
+    if (typeof window === "undefined") return [];
+
+    const savedLogs = localStorage.getItem("logs");
+    if (!savedLogs) return [];
+
+    const parsedLogs = JSON.parse(savedLogs);
+
+    return parsedLogs.map((log: any) => ({
+      ...log,
+      id: log.id ?? crypto.randomUUID(),
+      date: log.date ?? new Date().toISOString(),
+      tags: log.tags ?? [],
+    }));
+  });
   const [editText, setEditText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -47,26 +61,16 @@ export default function Home() {
     return matches.map(tag => tag.replace("#", ""));
   };
 
+  const tagCount = logs
+    .flatMap(log => log.tags)
+    .reduce((acc, tag) => {
+      acc[tag] = (acc[tag] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
   useEffect(() => {
     localStorage.setItem("logs", JSON.stringify(logs));
   }, [logs]);
-
-  useEffect(() => {
-    const savedLogs = localStorage.getItem("logs");
-    if (savedLogs) {
-      const parsedLogs = JSON.parse(savedLogs);
-
-      const logsWithId = parsedLogs.map((log: any) => ({
-        ...log,
-        id: log.id ?? crypto.randomUUID(),
-        date: log.date ?? new Date().toISOString(),
-        tags: log.tags ?? [],
-      }));
-
-      setLogs(logsWithId);
-      localStorage.setItem("logs", JSON.stringify(logsWithId));
-    }
-  }, []);
 
   return (
     <main style={{ padding: "20px" }}>
@@ -95,13 +99,46 @@ export default function Home() {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="検索"
           />
+          {search && (
+            <div>
+              「{search}」で検索中
+              <button onClick={() => setSearch("")}>クリア</button>
+            </div>
+          )}
+
+          <div style={{ marginTop: "10px" }}>
+            <div>タグ一覧</div>
+            <div>
+              {Object.keys(tagCount).length === 0 ? (
+                <div>タグなし</div>
+              ) : (
+                Object.entries(tagCount)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([tag, count]) => (
+                    <span
+                      key={tag}
+                      onClick={() => {
+                        setSearch(tag);
+                        setEditingId(null);
+                      }}
+                      style={{ marginRight: "8px", cursor: "pointer" }}
+                    >
+                      #{tag} ({count})
+                    </span>
+                  ))
+              )}
+            </div>
+          </div>
         </div>
       )}
 
       <ul>
         {logs
           .filter(log =>
-            log.text.toLowerCase().includes(search.toLowerCase())
+            log.text.toLowerCase().includes(search.toLowerCase()) ||
+            log.tags.some(tag =>
+              tag.toLowerCase().includes(search.toLowerCase())
+            )
           )
           .map(log => (
           <li key={log.id}>
@@ -121,7 +158,13 @@ export default function Home() {
 
                 <div>
                   {log.tags.map(tag => (
-                    <span key={tag}>#{tag} </span>
+                    <span
+                      key={tag}
+                      onClick={() => setSearch(tag)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      #{tag}{" "}
+                    </span>
                   ))}
                 </div>
 
