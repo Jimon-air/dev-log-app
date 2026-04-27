@@ -1,35 +1,37 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import LogForm from "./components/LogForm";
+import LogList from "./components/LogList";
+
+type Log = {
+  id: string;
+  text: string;
+  date: string;
+  tags: string[];
+};
 
 export default function Home() {
   const [text, setText] = useState("");
-  const [logs, setLogs] = useState<
-    { id: string; text: string; date: string; tags: string[] }[]
-  >(() => {
-    if (typeof window === "undefined") return [];
+  const [logs, setLogs] = useState<Log[]>([]);
 
-    const savedLogs = localStorage.getItem("logs");
-    if (!savedLogs) return [];
-
-    const parsedLogs = JSON.parse(savedLogs);
-
-    return parsedLogs.map((log: any) => ({
-      ...log,
-      id: log.id ?? crypto.randomUUID(),
-      date: log.date ?? new Date().toISOString(),
-      tags: log.tags ?? [],
-    }));
-  });
   const [editText, setEditText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
+  const extractTags = (text: string) => {
+    const matches = text.match(/#\S+/g) || [];
+    return matches.map((tag) => tag.replace("#", ""));
+  };
+
   const addLog = () => {
     if (text.trim() === "") return;
+
     const tags = extractTags(text);
-    const newLog = {
+
+    const newLog: Log = {
       id: crypto.randomUUID(),
-      text: text,
+      text,
       date: new Date().toLocaleDateString(),
       tags,
     };
@@ -41,7 +43,7 @@ export default function Home() {
   const saveEdit = (id: string) => {
     if (editText.trim() === "") return;
 
-    const tags = extractTags(editText); // ← 追加
+    const tags = extractTags(editText);
 
     const newLogs = logs.map((log) =>
       log.id === id ? { ...log, text: editText, tags } : log
@@ -56,130 +58,54 @@ export default function Home() {
     setLogs(logs.filter((log) => log.id !== id));
   };
 
-  const extractTags = (text: string) => {
-    const matches = text.match(/#\S+/g) || [];
-    return matches.map(tag => tag.replace("#", ""));
-  };
-
   const tagCount = logs
-    .flatMap(log => log.tags)
+    .flatMap((log) => log.tags)
     .reduce((acc, tag) => {
       acc[tag] = (acc[tag] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
   useEffect(() => {
-    localStorage.setItem("logs", JSON.stringify(logs));
-  }, [logs]);
+    const savedLogs = localStorage.getItem("logs");
+    if (!savedLogs) return;
+
+    const parsedLogs = JSON.parse(savedLogs);
+
+    const logsWithId = parsedLogs.map((log: any) => ({
+      ...log,
+      id: log.id ?? crypto.randomUUID(),
+      date: log.date ?? new Date().toISOString(),
+      tags: log.tags ?? [],
+    }));
+
+    setLogs(logsWithId);
+  }, []);
 
   return (
     <main style={{ padding: "20px" }}>
       <h1>開発ログアプリ</h1>
 
-      {editingId === null && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  addLog();
-                }
-              }}
-              placeholder="今日やったこと"
-            />
-            <button onClick={addLog}>追加</button>
-          </div>
+      <LogForm
+        text={text}
+        setText={setText}
+        addLog={addLog}
+        search={search}
+        setSearch={setSearch}
+        tagCount={tagCount}
+        editingId={editingId}
+        setEditingId={setEditingId}
+      />
 
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="検索"
-          />
-          {search && (
-            <div>
-              「{search}」で検索中
-              <button onClick={() => setSearch("")}>クリア</button>
-            </div>
-          )}
-
-          <div style={{ marginTop: "10px" }}>
-            <div>タグ一覧</div>
-            <div>
-              {Object.keys(tagCount).length === 0 ? (
-                <div>タグなし</div>
-              ) : (
-                Object.entries(tagCount)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([tag, count]) => (
-                    <span
-                      key={tag}
-                      onClick={() => {
-                        setSearch(tag);
-                        setEditingId(null);
-                      }}
-                      style={{ marginRight: "8px", cursor: "pointer" }}
-                    >
-                      #{tag} ({count})
-                    </span>
-                  ))
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      <ul>
-        {logs
-          .filter(log =>
-            log.text.toLowerCase().includes(search.toLowerCase()) ||
-            log.tags.some(tag =>
-              tag.toLowerCase().includes(search.toLowerCase())
-            )
-          )
-          .map(log => (
-          <li key={log.id}>
-            {editingId === log.id ? (
-              <>
-                <input
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-                <button onClick={() => saveEdit(log.id)}>保存</button>
-              </>
-            ) : (
-              <>
-                <div>
-                  {log.text}（{log.date}）
-                </div>
-
-                <div>
-                  {log.tags.map(tag => (
-                    <span
-                      key={tag}
-                      onClick={() => setSearch(tag)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      #{tag}{" "}
-                    </span>
-                  ))}
-                </div>
-
-                <button onClick={() => deleteLog(log.id)}>削除</button>
-                <button onClick={() => {
-                  setEditText(log.text);
-                  setEditingId(log.id);
-                }}>
-                  編集
-                </button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      <LogList
+        logs={logs}
+        search={search}
+        editingId={editingId}
+        editText={editText}
+        setEditText={setEditText}
+        setEditingId={setEditingId}
+        saveEdit={saveEdit}
+        deleteLog={deleteLog}
+      />
     </main>
   );
 }
