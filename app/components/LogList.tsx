@@ -14,6 +14,7 @@ type Props = {
   setEditingId: (v: string | null) => void;
   saveEdit: (id: string) => void;
   deleteLog: (id: string) => void;
+  sortOrder: "new" | "old";
 };
 
 export default function LogList({
@@ -25,12 +26,21 @@ export default function LogList({
   setEditingId,
   saveEdit,
   deleteLog,
+  sortOrder,
 }: Props) {
   const keyword = search.toLowerCase();
 
+  const sortedLogs = [...logs].sort((a, b) => {
+    if (sortOrder === "new") {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    } else {
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    }
+  });
+
   return (
     <ul>
-      {logs
+      {sortedLogs
         .filter(
           (log) =>
             log.text.toLowerCase().includes(keyword) ||
@@ -50,12 +60,24 @@ export default function LogList({
                   <input
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") saveEdit(log.id);
+                      if (e.key === "Escape") {
+                        setEditingId(null);
+                        setEditText("");
+                      }
+                    }}
                     style={{ width: "100%" }}
                   />
 
                   <div style={{ marginTop: "8px", display: "flex", gap: "8px" }}>
                     <button onClick={() => saveEdit(log.id)}>保存</button>
-                    <button onClick={() => setEditingId(null)}>キャンセル</button>
+                    <button onClick={() => {
+                      setEditingId(null);
+                      setEditText("");
+                    }}>
+                      キャンセル
+                    </button>
                   </div>
                 </>
               ) : (

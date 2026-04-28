@@ -7,6 +7,8 @@ type Props = {
   tagCount: Record<string, number>;
   editingId: string | null;
   setEditingId: (v: string | null) => void;
+  sortOrder: "new" | "old";
+  setSortOrder: (v: "new" | "old") => void;
 };
 
 export default function LogForm({
@@ -18,6 +20,8 @@ export default function LogForm({
   tagCount,
   editingId,
   setEditingId,
+  sortOrder,
+  setSortOrder,
 }: Props) {
   if (editingId !== null) return null;
 
@@ -40,6 +44,14 @@ export default function LogForm({
         onChange={(e) => setSearch(e.target.value)}
         placeholder="検索"
       />
+
+      <select
+        value={sortOrder}
+        onChange={(e) => setSortOrder(e.target.value as "new" | "old")}
+      >
+        <option value="new">新しい順</option>
+        <option value="old">古い順</option>
+      </select>
 
       {search && (
         <div>

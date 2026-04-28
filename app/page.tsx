@@ -20,6 +20,7 @@ export default function Home() {
   const [editText, setEditText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
 
   const extractTags = (text: string) => {
     const matches = text.match(/#\S+/g) || [];
@@ -104,6 +105,8 @@ export default function Home() {
         tagCount={tagCount}
         editingId={editingId}
         setEditingId={setEditingId}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
       />
 
       <LogList
@@ -115,6 +118,7 @@ export default function Home() {
         setEditingId={setEditingId}
         saveEdit={saveEdit}
         deleteLog={deleteLog}
+        sortOrder={sortOrder}
       />
     </main>
   );
