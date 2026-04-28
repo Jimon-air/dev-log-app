@@ -3,13 +3,7 @@
 import { useState, useEffect } from "react";
 import LogForm from "./components/LogForm";
 import LogList from "./components/LogList";
-
-type Log = {
-  id: string;
-  text: string;
-  date: string;
-  tags: string[];
-};
+import { Log } from "./types/log";
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -35,7 +29,7 @@ export default function Home() {
     const newLog: Log = {
       id: crypto.randomUUID(),
       text,
-      date: new Date().toLocaleDateString(),
+      date: new Date().toISOString(),
       tags,
     };
 
@@ -87,6 +81,8 @@ export default function Home() {
     if (!isLoaded) return;
     localStorage.setItem("logs", JSON.stringify(logs));
   }, [logs, isLoaded]);
+
+  if (!isLoaded) return null;
 
   return (
     <main style={{ 

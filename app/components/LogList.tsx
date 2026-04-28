@@ -1,9 +1,4 @@
-type Log = {
-  id: string;
-  text: string;
-  date: string;
-  tags: string[];
-};
+import { Log } from "../types/log";
 
 type Props = {
   logs: Log[];
@@ -85,7 +80,7 @@ export default function LogList({
                   <div>{log.text}</div>
 
                   <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>
-                    {log.date}
+                    {new Date(log.date).toLocaleDateString()}
                   </div>
 
                   <div>
