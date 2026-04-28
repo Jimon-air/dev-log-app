@@ -38,45 +38,62 @@ export default function LogList({
         )
         .map((log) => (
           <li key={log.id}>
-            {editingId === log.id ? (
-              <>
-                <input
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-                <button onClick={() => saveEdit(log.id)}>保存</button>
-              </>
-            ) : (
-              <>
-                <div>
-                  {log.text}（{log.date}）
-                </div>
+            <div style={{
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              padding: "12px",
+              marginBottom: "10px"
+            }}>
 
-                <div>
-                  {log.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      onClick={() => {
-                        setEditingId(null);
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      #{tag}{" "}
-                    </span>
-                  ))}
-                </div>
+              {editingId === log.id ? (
+                <>
+                  <input
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    style={{ width: "100%" }}
+                  />
 
-                <button onClick={() => deleteLog(log.id)}>削除</button>
-                <button
-                  onClick={() => {
-                    setEditText(log.text);
-                    setEditingId(log.id);
-                  }}
-                >
-                  編集
-                </button>
-              </>
-            )}
+                  <div style={{ marginTop: "8px", display: "flex", gap: "8px" }}>
+                    <button onClick={() => saveEdit(log.id)}>保存</button>
+                    <button onClick={() => setEditingId(null)}>キャンセル</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>{log.text}</div>
+
+                  <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>
+                    {log.date}
+                  </div>
+
+                  <div>
+                    {log.tags.map(tag => (
+                      <span
+                        key={tag}
+                        style={{
+                          background: "#eee",
+                          padding: "2px 6px",
+                          borderRadius: "4px",
+                          marginRight: "4px"
+                        }}
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div style={{ marginTop: "8px", display: "flex", gap: "8px" }}>
+                    <button onClick={() => deleteLog(log.id)}>削除</button>
+                    <button onClick={() => {
+                      setEditText(log.text);
+                      setEditingId(log.id);
+                    }}>
+                      編集
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </li>
         ))}
     </ul>

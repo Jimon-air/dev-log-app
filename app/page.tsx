@@ -15,6 +15,8 @@ export default function Home() {
   const [text, setText] = useState("");
   const [logs, setLogs] = useState<Log[]>([]);
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const [editText, setEditText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -67,22 +69,30 @@ export default function Home() {
 
   useEffect(() => {
     const savedLogs = localStorage.getItem("logs");
-    if (!savedLogs) return;
-
-    const parsedLogs = JSON.parse(savedLogs);
-
-    const logsWithId = parsedLogs.map((log: any) => ({
-      ...log,
-      id: log.id ?? crypto.randomUUID(),
-      date: log.date ?? new Date().toISOString(),
-      tags: log.tags ?? [],
-    }));
-
-    setLogs(logsWithId);
+    if (savedLogs) {
+      const parsedLogs = JSON.parse(savedLogs);
+      const logsWithId = parsedLogs.map((log: any) => ({
+        ...log,
+        id: log.id ?? crypto.randomUUID(),
+        date: log.date ?? new Date().toISOString(),
+        tags: log.tags ?? [],
+      }));
+      setLogs(logsWithId);
+    }
+    setIsLoaded(true);
   }, []);
 
+  useEffect(() => {
+    if (!isLoaded) return;
+    localStorage.setItem("logs", JSON.stringify(logs));
+  }, [logs, isLoaded]);
+
   return (
-    <main style={{ padding: "20px" }}>
+    <main style={{ 
+      padding: "20px",
+      maxWidth: "600px",
+      margin: "0 auto"
+    }}>
       <h1>開発ログアプリ</h1>
 
       <LogForm
