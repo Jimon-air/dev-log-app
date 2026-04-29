@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dev Log App
 
-## Getting Started
+日々の学習や開発内容を記録・振り返りできるシンプルなログアプリです。
 
-First, run the development server:
+## 🔗 URL
+https://dev-log-app-omega.vercel.app
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📝 概要
+エンジニアとしての成長を可視化するために、日々の作業ログを簡単に記録・管理できるアプリを作成しました。  
+「継続」と「振り返り」を習慣化することを目的としています。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ 主な機能
+- ログの作成
+- ログの一覧表示
+<!-- 編集・削除機能を実装したら追記 -->
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠 使用技術
+- Next.js
+- React
+- （使っているものがあれば追記：Supabase / Firebase など）
+- Vercel（デプロイ）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💡 工夫した点
+- シンプルで直感的に使えるUI設計
+- 学習ログを継続しやすい構成
+- 最小構成で素早くリリース
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚧 今後の改善予定
+- ログの編集・削除機能
+- UI/UXの改善
+- 検索・フィルター機能の追加
+- モバイル対応の強化
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📌 開発背景
+日々の学習内容や開発記録を残したいと考えた際、  
+手軽に使えて継続しやすいツールが欲しいと思い、本アプリを開発しました。
+
+---
+
+## 👤 作者
+ポートフォリオ用に作成
