@@ -26,8 +26,8 @@ export default function LogForm({
   if (editingId !== null) return null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-      <div style={{ display: "flex", gap: "8px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      <div style={{ display: "flex", gap: "12px" }}>
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -35,19 +35,53 @@ export default function LogForm({
             if (e.key === "Enter") addLog();
           }}
           placeholder="今日やったこと"
+          style={{
+            flex: 1,
+            padding: "12px",
+            borderRadius: "8px",
+            border: "1px solid #e5e5e5",
+            fontSize: "14px",
+            outline: "none",
+          }}
         />
-        <button onClick={addLog}>追加</button>
+        <button
+          onClick={addLog}
+          style={{
+            padding: "12px 16px",
+            borderRadius: "8px",
+            border: "none",
+            background: "#3b82f6",
+            color: "#fff",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+        >
+          追加
+        </button>
       </div>
 
       <input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="検索"
+        style={{
+          padding: "10px",
+          borderRadius: "8px",
+          border: "1px solid #e5e5e5",
+          fontSize: "14px",
+        }}
       />
 
       <select
         value={sortOrder}
         onChange={(e) => setSortOrder(e.target.value as "new" | "old")}
+        style={{
+          padding: "10px",
+          borderRadius: "8px",
+          border: "1px solid #e5e5e5",
+          fontSize: "14px",
+          background: "#fff",
+        }}
       >
         <option value="new">新しい順</option>
         <option value="old">古い順</option>
@@ -56,7 +90,20 @@ export default function LogForm({
       {search && (
         <div>
           「{search}」で検索中
-          <button onClick={() => setSearch("")}>クリア</button>
+          <button
+            onClick={() => setSearch("")}
+            style={{
+              marginLeft: "8px",
+              padding: "4px 8px",
+              borderRadius: "6px",
+              border: "1px solid #ddd",
+              background: "#fff",
+              cursor: "pointer",
+              fontSize: "12px",
+            }}
+          >
+            クリア
+          </button>
         </div>
       )}
 
@@ -75,7 +122,15 @@ export default function LogForm({
                     setSearch(tag);
                     setEditingId(null);
                   }}
-                  style={{ marginRight: "8px", cursor: "pointer" }}
+                  style={{
+                    background: "#f1f5f9",
+                    padding: "6px 10px",
+                    borderRadius: "999px",
+                    fontSize: "12px",
+                    marginRight: "8px",
+                    cursor: "pointer",
+                    display: "inline-block",
+                  }}
                 >
                   #{tag} ({count})
                 </span>

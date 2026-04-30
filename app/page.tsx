@@ -43,7 +43,7 @@ export default function Home() {
     const tags = extractTags(editText);
 
     const newLogs = logs.map((log) =>
-      log.id === id ? { ...log, text: editText, tags } : log
+      log.id === id ? { ...log, text: editText, tags } : log,
     );
 
     setLogs(newLogs);
@@ -57,10 +57,13 @@ export default function Home() {
 
   const tagCount = logs
     .flatMap((log) => log.tags)
-    .reduce((acc, tag) => {
-      acc[tag] = (acc[tag] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    .reduce(
+      (acc, tag) => {
+        acc[tag] = (acc[tag] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
   useEffect(() => {
     const savedLogs = localStorage.getItem("logs");
@@ -85,12 +88,25 @@ export default function Home() {
   if (!isLoaded) return null;
 
   return (
-    <main style={{ 
-      padding: "20px",
-      maxWidth: "600px",
-      margin: "0 auto"
-    }}>
-      <h1>開発ログアプリ</h1>
+    <main
+      style={{
+        padding: "24px",
+        maxWidth: "640px",
+        margin: "40px auto",
+        background: "#fff",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "24px",
+          fontWeight: "700",
+          marginBottom: "16px",
+        }}
+      >
+        開発ログ
+      </h1>
 
       <LogForm
         text={text}

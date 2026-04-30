@@ -34,22 +34,39 @@ export default function LogList({
   });
 
   return (
-    <ul>
+    <ul
+      style={{
+        listStyle: "none",
+        padding: 0,
+        margin: 0,
+      }}
+    >
       {sortedLogs
         .filter(
           (log) =>
             log.text.toLowerCase().includes(keyword) ||
-            log.tags.some((tag) => tag.toLowerCase().includes(keyword))
+            log.tags.some((tag) => tag.toLowerCase().includes(keyword)),
         )
         .map((log) => (
           <li key={log.id}>
-            <div style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "12px",
-              marginBottom: "10px"
-            }}>
-
+            <div
+              style={{
+                border: "1px solid #e5e5e5",
+                borderRadius: "12px",
+                padding: "16px",
+                marginBottom: "12px",
+                background: "#fff",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.1)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.04)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
               {editingId === log.id ? (
                 <>
                   <input
@@ -62,36 +79,76 @@ export default function LogList({
                         setEditText("");
                       }
                     }}
-                    style={{ width: "100%" }}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid #e5e5e5",
+                    }}
                   />
 
-                  <div style={{ marginTop: "8px", display: "flex", gap: "8px" }}>
-                    <button onClick={() => saveEdit(log.id)}>保存</button>
-                    <button onClick={() => {
-                      setEditingId(null);
-                      setEditText("");
-                    }}>
+                  <div
+                    style={{ marginTop: "8px", display: "flex", gap: "12px" }}
+                  >
+                    <button
+                      onClick={() => saveEdit(log.id)}
+                      style={{
+                        padding: "6px 10px",
+                        borderRadius: "6px",
+                        border: "none",
+                        background: "#3b82f6",
+                        color: "#fff",
+                      }}
+                    >
+                      保存
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingId(null);
+                        setEditText("");
+                      }}
+                      style={{
+                        padding: "6px 10px",
+                        borderRadius: "6px",
+                        border: "1px solid #ddd",
+                        background: "#fff",
+                      }}
+                    >
                       キャンセル
                     </button>
                   </div>
                 </>
               ) : (
                 <>
-                  <div>{log.text}</div>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    {log.text}
+                  </div>
 
-                  <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      color: "#888",
+                      marginTop: "4px",
+                    }}
+                  >
                     {new Date(log.date).toLocaleDateString()}
                   </div>
 
                   <div>
-                    {log.tags.map(tag => (
+                    {log.tags.map((tag) => (
                       <span
                         key={tag}
                         style={{
-                          background: "#eee",
-                          padding: "2px 6px",
-                          borderRadius: "4px",
-                          marginRight: "4px"
+                          background: "#f1f5f9",
+                          padding: "4px 8px",
+                          borderRadius: "999px",
+                          fontSize: "12px",
+                          marginRight: "6px",
                         }}
                       >
                         #{tag}
@@ -99,12 +156,35 @@ export default function LogList({
                     ))}
                   </div>
 
-                  <div style={{ marginTop: "8px", display: "flex", gap: "8px" }}>
-                    <button onClick={() => deleteLog(log.id)}>削除</button>
-                    <button onClick={() => {
-                      setEditText(log.text);
-                      setEditingId(log.id);
-                    }}>
+                  <div
+                    style={{ marginTop: "8px", display: "flex", gap: "12px" }}
+                  >
+                    <button
+                      onClick={() => deleteLog(log.id)}
+                      style={{
+                        padding: "6px 10px",
+                        borderRadius: "6px",
+                        border: "none",
+                        background: "#ef4444",
+                        color: "#fff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      削除
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditText(log.text);
+                        setEditingId(log.id);
+                      }}
+                      style={{
+                        padding: "6px 10px",
+                        borderRadius: "6px",
+                        border: "1px solid #ddd",
+                        background: "#fff",
+                        cursor: "pointer",
+                      }}
+                    >
                       編集
                     </button>
                   </div>
