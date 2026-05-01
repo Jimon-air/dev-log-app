@@ -1,6 +1,6 @@
 type Props = {
   text: string;
-  setText: (v: string) => void;
+  setText: React.Dispatch<React.SetStateAction<string>>;
   addLog: () => void;
   search: string;
   setSearch: (v: string) => void;
@@ -34,7 +34,7 @@ export default function LogForm({
           onKeyDown={(e) => {
             if (e.key === "Enter") addLog();
           }}
-          placeholder="今日やったこと"
+          placeholder="今日やったこと（例：#UI #React）"
           style={{
             flex: 1,
             padding: "12px",
@@ -119,7 +119,7 @@ export default function LogForm({
                 <span
                   key={tag}
                   onClick={() => {
-                    setSearch(tag);
+                    setText((prev) => (prev ? prev + ` #${tag}` : `#${tag}`));
                     setEditingId(null);
                   }}
                   style={{

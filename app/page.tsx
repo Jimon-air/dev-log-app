@@ -4,12 +4,11 @@ import { useState, useEffect } from "react";
 import LogForm from "./components/LogForm";
 import LogList from "./components/LogList";
 import { Log } from "./types/log";
+import { supabase } from "../lib/supabase";
 
 export default function Home() {
   const [text, setText] = useState("");
   const [logs, setLogs] = useState<Log[]>([]);
-
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const [editText, setEditText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -21,38 +20,63 @@ export default function Home() {
     return matches.map((tag) => tag.replace("#", ""));
   };
 
-  const addLog = () => {
+  const addLog = async () => {
     if (text.trim() === "") return;
 
-    const tags = extractTags(text);
+    const { data, error } = await supabase
+      .from("logs")
+      .insert([
+        {
+          text,
+          date: new Date().toISOString(),
+          tags: extractTags(text),
+        },
+      ])
+      .select()
+      .single();
 
-    const newLog: Log = {
-      id: crypto.randomUUID(),
-      text,
-      date: new Date().toISOString(),
-      tags,
-    };
+    if (error) {
+      console.error(error);
+      return;
+    }
 
-    setLogs((prev) => [newLog, ...prev]);
+    setLogs((prev) => [data, ...prev]);
     setText("");
   };
 
-  const saveEdit = (id: string) => {
+  const saveEdit = async (id: string) => {
     if (editText.trim() === "") return;
 
-    const tags = extractTags(editText);
+    const { data, error } = await supabase
+      .from("logs")
+      .update({
+        text: editText,
+        tags: extractTags(editText),
+      })
+      .eq("id", id)
+      .select()
+      .single();
 
-    const newLogs = logs.map((log) =>
-      log.id === id ? { ...log, text: editText, tags } : log,
-    );
+    if (error) {
+      console.error(error);
+      return;
+    }
 
-    setLogs(newLogs);
+    setLogs((prev) => prev.map((log) => (log.id === id ? data : log)));
+
     setEditText("");
     setEditingId(null);
   };
 
-  const deleteLog = (id: string) => {
-    setLogs(logs.filter((log) => log.id !== id));
+  const deleteLog = async (id: string) => {
+    const { error } = await supabase.from("logs").delete().eq("id", id);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    setLogs((prev) => prev.filter((log) => log.id !== id));
   };
 
   const tagCount = logs
@@ -66,26 +90,22 @@ export default function Home() {
     );
 
   useEffect(() => {
-    const savedLogs = localStorage.getItem("logs");
-    if (savedLogs) {
-      const parsedLogs = JSON.parse(savedLogs);
-      const logsWithId = parsedLogs.map((log: any) => ({
-        ...log,
-        id: log.id ?? crypto.randomUUID(),
-        date: log.date ?? new Date().toISOString(),
-        tags: log.tags ?? [],
-      }));
-      setLogs(logsWithId);
-    }
-    setIsLoaded(true);
+    const fetchLogs = async () => {
+      const { data, error } = await supabase
+        .from("logs")
+        .select("*")
+        .order("date", { ascending: false });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setLogs(data ?? []);
+    };
+
+    fetchLogs();
   }, []);
-
-  useEffect(() => {
-    if (!isLoaded) return;
-    localStorage.setItem("logs", JSON.stringify(logs));
-  }, [logs, isLoaded]);
-
-  if (!isLoaded) return null;
 
   return (
     <main
