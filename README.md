@@ -49,10 +49,16 @@ cd dev-log-app
 npm install
 ```
 
-`.env.local` を作成し、Supabaseの接続情報を設定します。
+`.env.local.example` をコピーして `.env.local` を作成します。
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+cp .env.local.example .env.local
+```
+
+`.env.local` にSupabaseの接続情報を設定します。
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
