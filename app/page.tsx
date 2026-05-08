@@ -3,6 +3,8 @@
 import { useState } from "react";
 import LogForm from "./components/LogForm";
 import LogList from "./components/LogList";
+import LogSearchControls from "./components/LogSearchControls";
+import TagFilter from "./components/TagFilter";
 import { getTagCount } from "../utils/getTagCount";
 import { useLogs } from "../hooks/useLogs";
 
@@ -39,19 +41,29 @@ export default function Home() {
     <main style={{ padding: "24px", maxWidth: "640px", margin: "40px auto" }}>
       <h1>開発ログ</h1>
 
-      <LogForm
-        text={text}
-        setText={setText}
-        addLog={handleAddLog}
-        search={search}
-        setSearch={setSearch}
-        tagCount={tagCount}
-        editingId={editingId}
-        setEditingId={setEditingId}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        isSubmitting={isSubmitting}
-      />
+      {editingId === null && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <LogForm
+            text={text}
+            setText={setText}
+            addLog={handleAddLog}
+            isSubmitting={isSubmitting}
+          />
+
+          <LogSearchControls
+            search={search}
+            setSearch={setSearch}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+          />
+
+          <TagFilter
+            tagCount={tagCount}
+            setText={setText}
+            setEditingId={setEditingId}
+          />
+        </div>
+      )}
 
       {error && <p style={{ color: "#dc2626" }}>{error}</p>}
 
