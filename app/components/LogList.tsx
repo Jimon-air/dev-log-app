@@ -1,4 +1,5 @@
 import { Log } from "../types/log";
+import { getVisibleLogs } from "../../utils/getVisibleLogs";
 import LogItem from "./LogItem";
 
 type Props = {
@@ -24,15 +25,7 @@ export default function LogList({
   deleteLog,
   sortOrder,
 }: Props) {
-  const keyword = search.toLowerCase();
-
-  const sortedLogs = [...logs].sort((a, b) => {
-    if (sortOrder === "new") {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    } else {
-      return new Date(a.date).getTime() - new Date(b.date).getTime();
-    }
-  });
+  const visibleLogs = getVisibleLogs(logs, search, sortOrder);
 
   return (
     <ul
@@ -42,24 +35,18 @@ export default function LogList({
         margin: 0,
       }}
     >
-      {sortedLogs
-        .filter(
-          (log) =>
-            log.text.toLowerCase().includes(keyword) ||
-            log.tags.some((tag) => tag.toLowerCase().includes(keyword)),
-        )
-        .map((log) => (
-          <LogItem
-            key={log.id}
-            log={log}
-            editingId={editingId}
-            editText={editText}
-            setEditText={setEditText}
-            setEditingId={setEditingId}
-            saveEdit={saveEdit}
-            deleteLog={deleteLog}
-          />
-        ))}
+      {visibleLogs.map((log) => (
+        <LogItem
+          key={log.id}
+          log={log}
+          editingId={editingId}
+          editText={editText}
+          setEditText={setEditText}
+          setEditingId={setEditingId}
+          saveEdit={saveEdit}
+          deleteLog={deleteLog}
+        />
+      ))}
     </ul>
   );
 }
