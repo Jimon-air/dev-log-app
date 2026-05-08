@@ -9,6 +9,7 @@ type Props = {
   setEditingId: (v: string | null) => void;
   sortOrder: "new" | "old";
   setSortOrder: (v: "new" | "old") => void;
+  isSubmitting: boolean;
 };
 
 export default function LogForm({
@@ -22,6 +23,7 @@ export default function LogForm({
   setEditingId,
   sortOrder,
   setSortOrder,
+  isSubmitting,
 }: Props) {
   if (editingId !== null) return null;
 
@@ -46,6 +48,7 @@ export default function LogForm({
         />
         <button
           onClick={addLog}
+          disabled={isSubmitting}
           style={{
             padding: "12px 16px",
             borderRadius: "8px",
@@ -53,7 +56,7 @@ export default function LogForm({
             background: "#3b82f6",
             color: "#fff",
             fontWeight: "600",
-            cursor: "pointer",
+            cursor: isSubmitting ? "not-allowed" : "pointer",
           }}
         >
           追加

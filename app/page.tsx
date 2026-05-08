@@ -8,7 +8,8 @@ import { useLogs } from "../hooks/useLogs";
 
 export default function Home() {
   const [text, setText] = useState("");
-  const { logs, addLog, saveEdit, deleteLog } = useLogs();
+  const { logs, loading, error, isSubmitting, addLog, saveEdit, deleteLog } =
+    useLogs();
 
   const [editText, setEditText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -49,7 +50,12 @@ export default function Home() {
         setEditingId={setEditingId}
         sortOrder={sortOrder}
         setSortOrder={setSortOrder}
+        isSubmitting={isSubmitting}
       />
+
+      {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+
+      {loading && <p>読み込み中...</p>}
 
       <LogList
         logs={logs}
