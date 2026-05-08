@@ -18,8 +18,8 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
 
-  const handleAddLog = async () => {
-    const success = await addLog(text);
+  const handleAddLog = async (logText: string) => {
+    const success = await addLog(logText);
 
     if (success) {
       setText("");
