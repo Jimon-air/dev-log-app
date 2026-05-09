@@ -1,5 +1,13 @@
 import { suggestTags } from "../../utils/suggestTags";
 
+const reflectionTemplate = `今日やったこと:
+
+詰まったこと:
+
+学んだこと:
+
+明日やること:`;
+
 type Props = {
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
@@ -31,6 +39,12 @@ export default function LogForm({
     addLog(`${text}${tagsText}`);
   };
 
+  const insertReflectionTemplate = () => {
+    setText((prev) =>
+      prev.trim() === "" ? reflectionTemplate : `${prev}\n\n${reflectionTemplate}`,
+    );
+  };
+
   return (
     <div>
       <div className="log-form">
@@ -43,7 +57,8 @@ export default function LogForm({
               handleAddLog();
             }
           }}
-          placeholder="今日やったこと（例：#UI #React）"
+          placeholder={`今日やったことや学んだことを書いてください
+例: Reactのフォームを改善した #UI`}
           rows={3}
           className="textarea"
         />
@@ -53,6 +68,16 @@ export default function LogForm({
           className="primary-button"
         >
           追加
+        </button>
+      </div>
+
+      <div className="suggested-tags">
+        <button
+          type="button"
+          onClick={insertReflectionTemplate}
+          className="clear-button"
+        >
+          振り返りテンプレートを挿入
         </button>
       </div>
 
