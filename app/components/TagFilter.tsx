@@ -10,11 +10,11 @@ export default function TagFilter({
   setEditingId,
 }: Props) {
   return (
-    <div style={{ marginTop: "10px" }}>
-      <div>タグ一覧</div>
-      <div>
+    <div className="tag-section">
+      <div className="tag-heading">タグ一覧</div>
+      <div className="tag-list">
         {Object.keys(tagCount).length === 0 ? (
-          <div>タグなし</div>
+          <div className="empty-text">タグなし</div>
         ) : (
           Object.entries(tagCount)
             .sort((a, b) => b[1] - a[1])
@@ -25,15 +25,7 @@ export default function TagFilter({
                   setText((prev) => (prev ? prev + ` #${tag}` : `#${tag}`));
                   setEditingId(null);
                 }}
-                style={{
-                  background: "#f1f5f9",
-                  padding: "6px 10px",
-                  borderRadius: "999px",
-                  fontSize: "12px",
-                  marginRight: "8px",
-                  cursor: "pointer",
-                  display: "inline-block",
-                }}
+                className="tag-chip tag-filter-chip"
               >
                 #{tag} ({count})
               </span>

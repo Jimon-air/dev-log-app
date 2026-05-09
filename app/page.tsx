@@ -38,11 +38,11 @@ export default function Home() {
   const tagCount = getTagCount(logs);
 
   return (
-    <main style={{ padding: "24px", maxWidth: "640px", margin: "40px auto" }}>
-      <h1>開発ログ</h1>
+    <main className="app-shell">
+      <h1 className="app-title">開発ログ</h1>
 
       {editingId === null && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <section className="log-input-card">
           <LogForm
             text={text}
             setText={setText}
@@ -62,12 +62,12 @@ export default function Home() {
             setText={setText}
             setEditingId={setEditingId}
           />
-        </div>
+        </section>
       )}
 
-      {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+      {error && <p className="error-text">{error}</p>}
 
-      {loading && <p>読み込み中...</p>}
+      {loading && <p className="status-text">読み込み中...</p>}
 
       <LogList
         logs={logs}

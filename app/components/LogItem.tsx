@@ -21,24 +21,7 @@ export default function LogItem({
 }: Props) {
   return (
     <li>
-      <div
-        style={{
-          border: "1px solid #e5e5e5",
-          borderRadius: "12px",
-          padding: "16px",
-          marginBottom: "12px",
-          background: "#fff",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.1)";
-          e.currentTarget.style.transform = "translateY(-2px)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.04)";
-          e.currentTarget.style.transform = "translateY(0)";
-        }}
-      >
+      <div className="log-card">
         {editingId === log.id ? (
           <>
             <input
@@ -52,28 +35,20 @@ export default function LogItem({
                   setEditText("");
                 }
               }}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "8px",
-                border: "1px solid #e5e5e5",
-              }}
+              className="field"
             />
 
-            <div
-              style={{
-                marginTop: "8px",
-                display: "flex",
-                gap: "12px",
-              }}
-            >
-              <button onClick={() => saveEdit(log.id)}>保存</button>
+            <div className="edit-actions">
+              <button onClick={() => saveEdit(log.id)} className="primary-button">
+                保存
+              </button>
 
               <button
                 onClick={() => {
                   setEditingId(null);
                   setEditText("");
                 }}
+                className="ghost-button"
               >
                 キャンセル
               </button>
@@ -81,30 +56,29 @@ export default function LogItem({
           </>
         ) : (
           <>
-            <div>{log.text}</div>
+            <div className="log-text">{log.text}</div>
 
-            <div>{new Date(log.date).toLocaleDateString()}</div>
+            <div className="log-date">{new Date(log.date).toLocaleDateString()}</div>
 
-            <div>
+            <div className="log-tags">
               {log.tags.map((tag) => (
-                <span key={tag}>#{tag}</span>
+                <span key={tag} className="tag-chip">
+                  #{tag}
+                </span>
               ))}
             </div>
 
-            <div
-              style={{
-                marginTop: "8px",
-                display: "flex",
-                gap: "12px",
-              }}
-            >
-              <button onClick={() => deleteLog(log.id)}>削除</button>
+            <div className="log-actions">
+              <button onClick={() => deleteLog(log.id)} className="danger-button">
+                削除
+              </button>
 
               <button
                 onClick={() => {
                   setEditText(log.text);
                   setEditingId(log.id);
                 }}
+                className="ghost-button"
               >
                 編集
               </button>

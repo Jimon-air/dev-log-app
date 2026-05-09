@@ -33,7 +33,7 @@ export default function LogForm({
 
   return (
     <div>
-      <div style={{ display: "flex", gap: "12px" }}>
+      <div className="log-form">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -45,40 +45,22 @@ export default function LogForm({
           }}
           placeholder="今日やったこと（例：#UI #React）"
           rows={3}
-          style={{
-            flex: 1,
-            padding: "12px",
-            borderRadius: "8px",
-            border: "1px solid #e5e5e5",
-            fontSize: "14px",
-            outline: "none",
-            resize: "vertical",
-            fontFamily: "inherit",
-          }}
+          className="textarea"
         />
         <button
           onClick={handleAddLog}
           disabled={isSubmitting}
-          style={{
-            padding: "12px 16px",
-            borderRadius: "8px",
-            border: "none",
-            background: "#3b82f6",
-            color: "#fff",
-            fontWeight: "600",
-            cursor: isSubmitting ? "not-allowed" : "pointer",
-            alignSelf: "flex-start",
-          }}
+          className="primary-button"
         >
           追加
         </button>
       </div>
 
       {suggestedTags.length > 0 && (
-        <div style={{ marginTop: "6px", fontSize: "12px", color: "#64748b" }}>
-          おすすめタグ{" "}
+        <div className="suggested-tags">
+          <span>おすすめタグ</span>
           {suggestedTags.map((tag) => (
-            <span key={tag} style={{ marginRight: "6px" }}>
+            <span key={tag} className="suggested-chip">
               #{tag}
             </span>
           ))}
