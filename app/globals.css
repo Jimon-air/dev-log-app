@@ -225,16 +225,6 @@ button {
   font-size: 13px;
 }
 
-.status-text {
-  margin: 12px 0;
-  color: var(--muted);
-}
-
-.error-text {
-  margin: 12px 0;
-  color: var(--danger);
-}
-
 .log-card {
   padding: 16px;
   margin-bottom: 12px;
@@ -276,6 +266,37 @@ button {
   display: flex;
   gap: 10px;
   margin-top: 10px;
+}
+
+.state-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  padding: 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.state-card-error {
+  border-color: #fecaca;
+  background: #fff7f7;
+}
+
+.state-title {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.state-description {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.state-card-error .state-title {
+  color: var(--danger);
 }
 
 @media (max-width: 640px) {

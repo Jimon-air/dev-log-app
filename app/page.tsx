@@ -65,21 +65,33 @@ export default function Home() {
         </section>
       )}
 
-      {error && <p className="error-text">{error}</p>}
+      {error && (
+        <section className="state-card state-card-error">
+          <div className="state-title">エラーが発生しました</div>
+          <div className="state-description">{error}</div>
+        </section>
+      )}
 
-      {loading && <p className="status-text">読み込み中...</p>}
+      {loading && (
+        <section className="state-card">
+          <div className="state-title">ログを読み込んでいます</div>
+          <div className="state-description">少しだけお待ちください。</div>
+        </section>
+      )}
 
-      <LogList
-        logs={logs}
-        search={search}
-        editingId={editingId}
-        editText={editText}
-        setEditText={setEditText}
-        setEditingId={setEditingId}
-        saveEdit={handleSaveEdit}
-        deleteLog={deleteLog}
-        sortOrder={sortOrder}
-      />
+      {!loading && (
+        <LogList
+          logs={logs}
+          search={search}
+          editingId={editingId}
+          editText={editText}
+          setEditText={setEditText}
+          setEditingId={setEditingId}
+          saveEdit={handleSaveEdit}
+          deleteLog={deleteLog}
+          sortOrder={sortOrder}
+        />
+      )}
     </main>
   );
 }

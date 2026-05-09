@@ -27,6 +27,28 @@ export default function LogList({
 }: Props) {
   const visibleLogs = getVisibleLogs(logs, search, sortOrder);
 
+  if (logs.length === 0) {
+    return (
+      <section className="state-card">
+        <div className="state-title">まだログがありません</div>
+        <div className="state-description">
+          今日やったことを最初に記録してみましょう。
+        </div>
+      </section>
+    );
+  }
+
+  if (visibleLogs.length === 0) {
+    return (
+      <section className="state-card">
+        <div className="state-title">条件に一致するログがありません</div>
+        <div className="state-description">
+          検索キーワードやタグを変えてみてください。
+        </div>
+      </section>
+    );
+  }
+
   return (
     <ul
       style={{
