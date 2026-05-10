@@ -1,3 +1,4 @@
+import { extractTags } from "../../utils/extractTags";
 import { suggestTags } from "../../utils/suggestTags";
 
 const reflectionTemplate = `今日やったこと:
@@ -38,6 +39,7 @@ export default function LogForm({
   const suggestedTags = suggestTags(text).filter(
     (tag) => !existingTags.has(tag.toLowerCase()),
   );
+  const tagCount = extractTags(text).length;
 
   const handleAddLog = () => {
     if (isSubmitting) return;
@@ -76,20 +78,25 @@ export default function LogForm({
   return (
     <div>
       <div className="log-form">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-              e.preventDefault();
-              handleAddLog();
-            }
-          }}
-          placeholder={`今日やったことや学んだことを書いてください
+        <div className="log-textarea-area">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                handleAddLog();
+              }
+            }}
+            placeholder={`今日やったことや学んだことを書いてください
 例: Reactのフォームを改善した #UI`}
-          rows={3}
-          className="textarea"
-        />
+            rows={3}
+            className="textarea"
+          />
+          <div className="input-status">
+            {text.length}文字 / タグ{tagCount}個
+          </div>
+        </div>
         <button
           onClick={handleAddLog}
           disabled={isSubmitting}

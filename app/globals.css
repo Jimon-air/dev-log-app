@@ -66,6 +66,10 @@ button {
   align-items: flex-start;
 }
 
+.log-textarea-area {
+  width: 100%;
+}
+
 .field,
 .textarea,
 .select {
@@ -155,6 +159,12 @@ button {
   grid-column: 1 / -1;
   color: var(--muted);
   font-size: 13px;
+}
+
+.input-status {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .clear-button {
