@@ -24,18 +24,17 @@ export default function LogItem({
       <div className="log-card">
         {editingId === log.id ? (
           <>
-            <input
+            <textarea
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") saveEdit(log.id);
-
                 if (e.key === "Escape") {
                   setEditingId(null);
                   setEditText("");
                 }
               }}
-              className="field"
+              rows={4}
+              className="textarea edit-textarea"
             />
 
             <div className="edit-actions">
