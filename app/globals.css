@@ -67,12 +67,14 @@ button {
 }
 
 .log-textarea-area {
+  min-width: 0;
   width: 100%;
 }
 
 .field,
 .textarea,
 .select {
+  min-width: 0;
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -159,6 +161,7 @@ button {
   grid-column: 1 / -1;
   color: var(--muted);
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 .input-status {
@@ -169,13 +172,14 @@ button {
 
 .clear-button {
   margin-left: 8px;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #fff;
   color: var(--muted);
   cursor: pointer;
   font-size: 12px;
+  line-height: 1.2;
 }
 
 .tag-section {
@@ -210,9 +214,11 @@ button {
 .suggested-chip {
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   border-radius: 999px;
   font-size: 12px;
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .tag-chip {
@@ -267,6 +273,7 @@ button {
 
 .log-text {
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
   line-height: 1.7;
 }
 
@@ -285,12 +292,14 @@ button {
 
 .log-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 14px;
 }
 
 .edit-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
 }
@@ -320,6 +329,7 @@ button {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .state-card-error .state-title {
@@ -349,6 +359,15 @@ button {
   }
 
   .primary-button {
+    width: 100%;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+  }
+
+  .edit-actions .primary-button,
+  .edit-actions .ghost-button {
     width: 100%;
   }
 }
