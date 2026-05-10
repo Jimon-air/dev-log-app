@@ -8,6 +8,17 @@ const reflectionTemplate = `今日やったこと:
 
 明日やること:`;
 
+const frequentTags = [
+  "UI",
+  "React",
+  "Next",
+  "TypeScript",
+  "Supabase",
+  "学習",
+  "Bug",
+  "改善",
+];
+
 type Props = {
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
@@ -45,6 +56,23 @@ export default function LogForm({
     );
   };
 
+  const addFrequentTag = (tag: string) => {
+    setText((prev) => {
+      const prevTags = new Set(
+        (prev.match(/#\S+/g) || []).map((prevTag) =>
+          prevTag.replace("#", "").toLowerCase(),
+        ),
+      );
+
+      if (prevTags.has(tag.toLowerCase())) {
+        return prev;
+      }
+
+      const separator = prev === "" || /\s$/.test(prev) ? "" : " ";
+      return `${prev}${separator}#${tag}`;
+    });
+  };
+
   return (
     <div>
       <div className="log-form">
@@ -69,6 +97,20 @@ export default function LogForm({
         >
           追加
         </button>
+      </div>
+
+      <div className="frequent-tags">
+        <span>よく使うタグ</span>
+        {frequentTags.map((tag) => (
+          <button
+            key={tag}
+            type="button"
+            onClick={() => addFrequentTag(tag)}
+            className="frequent-chip"
+          >
+            #{tag}
+          </button>
+        ))}
       </div>
 
       <div className="suggested-tags">

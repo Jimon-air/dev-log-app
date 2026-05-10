@@ -180,12 +180,14 @@ button {
 }
 
 .tag-list,
+.frequent-tags,
 .suggested-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
+.frequent-tags,
 .suggested-tags {
   margin-top: 8px;
   align-items: center;
@@ -194,6 +196,7 @@ button {
 }
 
 .tag-chip,
+.frequent-chip,
 .suggested-chip {
   display: inline-flex;
   align-items: center;
@@ -210,6 +213,20 @@ button {
 
 .tag-filter-chip {
   cursor: pointer;
+}
+
+.frequent-chip {
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.frequent-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .suggested-chip {
