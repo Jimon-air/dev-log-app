@@ -101,6 +101,10 @@ button {
   font-size: 14px;
 }
 
+.edit-textarea {
+  min-height: 140px;
+}
+
 .field:focus,
 .textarea:focus,
 .select:focus {
