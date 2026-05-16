@@ -8,18 +8,23 @@ import {
 } from "../lib/supabase/logs";
 import { extractTags } from "../utils/extractTags";
 
-export const useLogs = () => {
+export const useLogs = (userId: string) => {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    let isActive = true;
+
     const loadLogs = async () => {
+      setLogs([]);
       setLoading(true);
       setError(null);
 
-      const { data, error } = await fetchLogs();
+      const { data, error } = await fetchLogs(userId);
+
+      if (!isActive) return;
 
       if (error) {
         console.error(error);
@@ -33,7 +38,12 @@ export const useLogs = () => {
     };
 
     loadLogs();
-  }, []);
+
+    return () => {
+      isActive = false;
+      setLogs([]);
+    };
+  }, [userId]);
 
   const addLog = async (text: string) => {
     if (text.trim() === "") return false;
@@ -41,7 +51,7 @@ export const useLogs = () => {
     setIsSubmitting(true);
     setError(null);
 
-    const { data, error } = await createLog(text, extractTags(text));
+    const { data, error } = await createLog(userId, text, extractTags(text));
 
     if (error) {
       console.error(error);
@@ -62,6 +72,7 @@ export const useLogs = () => {
     setError(null);
 
     const { data, error } = await updateLog(
+      userId,
       id,
       editText,
       extractTags(editText),
@@ -84,7 +95,7 @@ export const useLogs = () => {
     setIsSubmitting(true);
     setError(null);
 
-    const { error } = await removeLog(id);
+    const { error } = await removeLog(userId, id);
 
     if (error) {
       console.error(error);

@@ -56,7 +56,7 @@ export default function Home() {
             </section>
           )}
 
-          <LogApp />
+          <LogApp userId={user.id} />
         </>
       )}
     </main>

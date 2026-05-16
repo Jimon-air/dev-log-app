@@ -8,10 +8,14 @@ import TagFilter from "./TagFilter";
 import { getTagCount } from "../../utils/getTagCount";
 import { useLogs } from "../../hooks/useLogs";
 
-export default function LogApp() {
+type Props = {
+  userId: string;
+};
+
+export default function LogApp({ userId }: Props) {
   const [text, setText] = useState("");
   const { logs, loading, error, isSubmitting, addLog, saveEdit, deleteLog } =
-    useLogs();
+    useLogs(userId);
 
   const [editText, setEditText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
